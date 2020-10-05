@@ -5,6 +5,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,12 +35,33 @@ public class QLNguoiDungActivity extends AppCompatActivity {
         listView = findViewById(R.id.lvList);
 
         mySqlite = new MySqlite(this);
-        UserDAO userDAO = new UserDAO(mySqlite);
+        final UserDAO userDAO = new UserDAO(mySqlite);
 
         List<NguoiDung> nguoiDungList = userDAO.getAllUsers();
         NguoiDungAdapter nguoiDungAdapter = new NguoiDungAdapter(nguoiDungList);
         listView.setAdapter(nguoiDungAdapter);
+        EditText edtTim = findViewById(R.id.edtTim);
 
+        edtTim.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0) {
+                    List<NguoiDung> nguoiDungList = userDAO.getAllUsers();
+                    NguoiDungAdapter nguoiDungAdapter = new NguoiDungAdapter(nguoiDungList);
+                    listView.setAdapter(nguoiDungAdapter);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
