@@ -111,4 +111,23 @@ public class QLNguoiDungActivity extends AppCompatActivity {
             return;
         }
     }
+
+    public void searchUserName(View view) {
+        EditText edtTim = findViewById(R.id.edtTim);
+        String username = edtTim.getText().toString().trim();
+        if (username.isEmpty()) {
+            edtTim.setError("NHAP DU LIEU TRC");
+            return;
+        }
+        UserDAO userDAO = new UserDAO(mySqlite);
+        List<NguoiDung> nguoiDungList = userDAO.timKiemUsername(username);
+
+        if (nguoiDungList.size() == 0) {
+            edtTim.setError("KHONG TIM THAY USER NAO!!!!");
+        } else {
+            NguoiDungAdapter nguoiDungAdapter = new NguoiDungAdapter(nguoiDungList);
+            listView.setAdapter(nguoiDungAdapter);
+        }
+
+    }
 }

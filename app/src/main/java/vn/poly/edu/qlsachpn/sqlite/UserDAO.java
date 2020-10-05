@@ -99,4 +99,31 @@ public class UserDAO {
     }
 
 
+    public List<NguoiDung> timKiemUsername(String TimUsername) {
+        List<NguoiDung> nguoiDungList = new ArrayList<>();
+        String sql = "SELECT * FROM USER WHERE username LIKE '%" + TimUsername + "%'";
+        Cursor cursor = mySqlite.getReadableDatabase().rawQuery(sql, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String username = cursor.getString(0);
+                String name = cursor.getString(1);
+                String password = cursor.getString(2);
+                String std = cursor.getString(3);
+
+                NguoiDung nguoiDung = new NguoiDung();
+                nguoiDung.username = username;
+                nguoiDung.ten = name;
+                nguoiDung.password = password;
+                nguoiDung.sdt = std;
+
+                nguoiDungList.add(nguoiDung);
+                cursor.moveToNext();
+            }
+        }
+
+        return nguoiDungList;
+    }
+
+
 }
