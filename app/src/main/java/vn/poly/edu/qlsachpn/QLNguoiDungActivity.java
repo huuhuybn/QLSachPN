@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import vn.poly.edu.qlsachpn.adapter.NguoiDungAdapter;
@@ -36,61 +35,80 @@ public class QLNguoiDungActivity extends AppCompatActivity {
         mySqlite = new MySqlite(this);
         UserDAO userDAO = new UserDAO(mySqlite);
 
-
         List<NguoiDung> nguoiDungList = userDAO.getAllUsers();
-
         NguoiDungAdapter nguoiDungAdapter = new NguoiDungAdapter(nguoiDungList);
-
         listView.setAdapter(nguoiDungAdapter);
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.user, menu);
+        getMenuInflater().inflate(R.menu.add_user, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.add_user) {
-
-            AlertDialog.Builder builder =
-                    new AlertDialog.Builder(QLNguoiDungActivity.this);
-            View view = LayoutInflater.from(this).inflate(R.layout.alert_add_user, null);
+        if (item.getItemId() == R.id.add) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            View view = LayoutInflater.from(this).inflate(R.layout.add_user_dialog, null);
             builder.setView(view);
 
-            final EditText editTextTextPersonName = view.findViewById(R.id.editTextTextPersonName);
-            final EditText editTextTextPersonName2 = view.findViewById(R.id.editTextTextPersonName2);
-            final EditText editTextTextPersonName3 = view.findViewById(R.id.editTextTextPersonName3);
-            final EditText editTextTextPersonName4 = view.findViewById(R.id.editTextTextPersonName4);
-            Button btn_save = view.findViewById(R.id.button);
-            Button btn_cancel = view.findViewById(R.id.button2);
-
+            final EditText editTextTextPersonName5 = view.findViewById(R.id.editTextTextPersonName5);
+            final EditText editTextTextPassword = view.findViewById(R.id.editTextTextPassword);
+            final EditText editTextPhone = view.findViewById(R.id.editTextPhone);
+            final EditText editTextTextPersonName6 = view.findViewById(R.id.editTextTextPersonName6);
+            Button button3 = view.findViewById(R.id.button3);
+            Button button4 = view.findViewById(R.id.button4);
             final AlertDialog alertDialog = builder.show();
-
-            btn_save.setOnClickListener(new View.OnClickListener() {
+            button3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String username = editTextTextPersonName.getText().toString().trim();
-                    String password = editTextTextPersonName2.getText().toString().trim();
-                    String name = editTextTextPersonName3.getText().toString().trim();
-                    String phone = editTextTextPersonName4.getText().toString().trim();
+                    NguoiDung nguoiDung = new NguoiDung();
+                    nguoiDung.username = editTextTextPersonName5.getText().toString().trim();
+                    nguoiDung.ten = editTextTextPersonName6.getText().toString().trim();
+                    nguoiDung.password = editTextTextPassword.getText().toString().trim();
+                    nguoiDung.sdt = editTextPhone.getText().toString().trim();
 
+                    checkEmpty(nguoiDung.username, editTextTextPersonName5);
+                    checkEmpty(nguoiDung.password, editTextTextPassword);
+                    checkEmpty(nguoiDung.sdt, editTextPhone);
+                    checkEmpty(nguoiDung.ten, editTextTextPersonName6);
 
-                    
+                    UserDAO userDAO = new UserDAO(mySqlite);
 
+                    boolean ketQua = userDAO.addUser(nguoiDung);
+                    if (ketQua) {
+                        Toast.makeText(QLNguoiDungActivity.this,
+                                "THANH CONG!!!", Toast.LENGTH_SHORT).show();
+                        alertDialog.dismiss();
+
+                        List<NguoiDung> nguoiDungList = userDAO.getAllUsers();
+                        NguoiDungAdapter nguoiDungAdapter = new NguoiDungAdapter(nguoiDungList);
+                        listView.setAdapter(nguoiDungAdapter);
+                    } else {
+                        Toast.makeText(QLNguoiDungActivity.this,
+                                "KHONG THANH CONG!!!", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             });
 
-            btn_cancel.setOnClickListener(new View.OnClickListener() {
+
+            button4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     alertDialog.dismiss();
                 }
             });
-
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkEmpty(String data, EditText edt) {
+        if (data.isEmpty()) {
+            edt.setError("Nhap du thong tin...");
+            return;
+        }
     }
 }
