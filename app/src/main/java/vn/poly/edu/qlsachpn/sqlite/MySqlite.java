@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MySqlite extends SQLiteOpenHelper {
 
+
+    // test github
     public MySqlite(Context context) {
         super(context, "mydata.sql", null, 1);
     }
