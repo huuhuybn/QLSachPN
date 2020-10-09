@@ -10,7 +10,7 @@ public class MySqlite extends SQLiteOpenHelper {
     public MySqlite(Context context) {
         super(context, "mydata.sql", null, 1);
     }
-    
+
     // khai bao bang
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -18,14 +18,23 @@ public class MySqlite extends SQLiteOpenHelper {
                 ",name varchar(50),password varchar" +
                 ",numberPhone char)";
         sqLiteDatabase.execSQL(user_table);
+
+//
+//        public String maTheLoai;
+//        public String tenTheLoai;
+//        public String viTri;
+//        public String moTa;
+
+        String theLoaiSach = "Create table TheLoai(maTheLoai text primary key," +
+                "tenTheLoai text,viTri Text,moTa text)";
+
+        sqLiteDatabase.execSQL(theLoaiSach);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
-
-
 
 
 }
